@@ -72,7 +72,7 @@
         const redBall = document.getElementById('redBall');
         const blueBall = document.getElementById('blueBall');
         const territory = document.getElementById('territory');
-        const coins = document.querySelectorAll('.coin');
+        let coins = Array.from(document.querySelectorAll('.coin'));
         let collectedCoins = [];
 
         // 红球跟随鼠标移动
@@ -101,7 +101,7 @@
 
         // 收集金币
         function collectCoins(x, y) {
-            coins.forEach((coin, index) => {
+            coins.forEach((coin) => {
                 const coinRect = coin.getBoundingClientRect();
                 if (x >= coinRect.left && x <= coinRect.right && y >= coinRect.top && y <= coinRect.bottom) {
                     if (!collectedCoins.includes(coin)) {
@@ -132,6 +132,9 @@
                     coin.style.left = 10 + 'px';
                     coin.style.top = nextTopOffset + 'px';
                     nextTopOffset += 30; // 更新下一个金币的偏移位置
+
+                    // 从 coins 数组中移除已放置的金币
+                    coins = coins.filter(c => c !== coin);
                 });
 
                 // 清空已收集金币数组
@@ -139,7 +142,6 @@
                 updateTerritoryColor();
             }
         }
-
 
         // 更新领地颜色
         function updateTerritoryColor() {
