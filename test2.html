@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>小红球和小蓝球</title>
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
             background-color: #f0f0f0;
             overflow: hidden;
         }
+
         .game-container {
             position: relative;
             width: 100%;
             height: 100%;
         }
+
         .territory {
             position: absolute;
             left: 0;
@@ -26,6 +30,7 @@
             background-color: #e0e0e0;
             z-index: 1;
         }
+
         .ball {
             width: 50px;
             height: 50px;
@@ -33,12 +38,15 @@
             position: absolute;
             z-index: 2;
         }
+
         .red-ball {
             background-color: #ff5733;
         }
+
         .blue-ball {
             background-color: #3498db;
         }
+
         .coin {
             width: 20px;
             height: 20px;
@@ -49,6 +57,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="game-container">
         <div class="territory" id="territory"></div>
@@ -111,14 +120,26 @@
             const territoryRect = territory.getBoundingClientRect();
 
             if (redRect.left < territoryRect.right) {
-                collectedCoins.forEach((coin, index) => {
-                    coin.style.left = territoryRect.left + 10 + 'px';
-                    coin.style.top = territoryRect.top + 10 + index * 30 + 'px';
+                // 获取领地中已有金币的数量
+                const existingCoins = Array.from(territory.querySelectorAll('.coin'));
+                let nextTopOffset = existingCoins.length * 30 + 10; // 计算下一个金币的位置
+
+                collectedCoins.forEach((coin) => {
+                    // 将金币移到领地元素中
+                    territory.appendChild(coin);
+
+                    // 设置每个金币的位置，使其位于领地内并避免覆盖已有金币
+                    coin.style.left = 10 + 'px';
+                    coin.style.top = nextTopOffset + 'px';
+                    nextTopOffset += 30; // 更新下一个金币的偏移位置
                 });
+
+                // 清空已收集金币数组
                 collectedCoins = [];
                 updateTerritoryColor();
             }
         }
+
 
         // 更新领地颜色
         function updateTerritoryColor() {
@@ -151,4 +172,5 @@
         }
     </script>
 </body>
+
 </html>
