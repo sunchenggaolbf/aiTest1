@@ -59,7 +59,7 @@
 </head>
 
 <body>
-    <div class="game-container">
+    <div class="game-container" id="gameContainer">
         <div class="territory" id="territory"></div>
         <div class="ball red-ball" id="redBall"></div>
         <div class="ball blue-ball" id="blueBall"></div>
@@ -72,8 +72,14 @@
         const redBall = document.getElementById('redBall');
         const blueBall = document.getElementById('blueBall');
         const territory = document.getElementById('territory');
+        const gameContainer = document.getElementById('gameContainer');
         let coins = Array.from(document.querySelectorAll('.coin'));
         let collectedCoins = [];
+
+        // 存储每个金币的初始位置
+        const initialPositions = coins.map(coin => {
+            return { id: coin.id, left: coin.style.left, top: coin.style.top };
+        });
 
         // 红球跟随鼠标移动
         document.addEventListener('mousemove', (event) => {
@@ -166,10 +172,22 @@
 
         // 清除领地中的所有金币
         function clearTerritory() {
-            const coinsInTerritory = territory.querySelectorAll('.coin');
-            coinsInTerritory.forEach(coin => {
-                coin.remove();
+            coins.forEach((coin) => {
+                // 获取金币的初始位置
+                const initialPosition = initialPositions.find(pos => pos.id === coin.id);
+                
+                // 恢复金币的初始位置和父组件
+                if (initialPosition) {
+                    coin.style.left = initialPosition.left;
+                    coin.style.top = initialPosition.top;
+                    gameContainer.appendChild(coin);
+                }
             });
+
+            // 重新设置 coins 数组，包含所有金币
+            coins = Array.from(document.querySelectorAll('.coin'));
+
+            // 重置领地背景颜色
             territory.style.backgroundColor = '#e0e0e0';
         }
     </script>
