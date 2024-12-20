@@ -75,6 +75,7 @@
         const gameContainer = document.getElementById('gameContainer');
         let coins = Array.from(document.querySelectorAll('.coin'));
         let collectedCoins = [];
+        let attachedCoins = [];
 
         // 存储每个金币的初始位置
         const initialPositions = coins.map(coin => {
@@ -85,6 +86,13 @@
         document.addEventListener('mousemove', (event) => {
             redBall.style.left = event.clientX - 25 + 'px';
             redBall.style.top = event.clientY - 25 + 'px';
+
+            // 更新附着在红球上的金币位置
+            attachedCoins.forEach(coin => {
+                coin.style.left = redBall.style.left;
+                coin.style.top = redBall.style.top;
+            });
+
             collectCoins(event.clientX, event.clientY);
         });
 
@@ -110,10 +118,11 @@
             coins.forEach((coin) => {
                 const coinRect = coin.getBoundingClientRect();
                 if (x >= coinRect.left && x <= coinRect.right && y >= coinRect.top && y <= coinRect.bottom) {
-                    if (!collectedCoins.includes(coin)) {
+                    if (!collectedCoins.includes(coin) && !attachedCoins.includes(coin)) {
                         collectedCoins.push(coin);
-                        coin.style.left = x - 10 + 'px';
-                        coin.style.top = y - 10 + 'px';
+                        attachedCoins.push(coin);
+                        coin.style.left = redBall.style.left;
+                        coin.style.top = redBall.style.top;
                     }
                 }
             });
@@ -130,7 +139,7 @@
                 const existingCoins = Array.from(territory.querySelectorAll('.coin'));
                 let nextTopOffset = existingCoins.length * 30 + 10; // 计算下一个金币的位置
 
-                collectedCoins.forEach((coin) => {
+                attachedCoins.forEach((coin) => {
                     // 将金币移到领地元素中
                     territory.appendChild(coin);
 
@@ -139,8 +148,9 @@
                     coin.style.top = nextTopOffset + 'px';
                     nextTopOffset += 30; // 更新下一个金币的偏移位置
 
-                    // 从 coins 数组中移除已放置的金币
+                    // 从 coins 和 attachedCoins 数组中移除已放置的金币
                     coins = coins.filter(c => c !== coin);
+                    attachedCoins = attachedCoins.filter(c => c !== coin);
                 });
 
                 // 清空已收集金币数组
