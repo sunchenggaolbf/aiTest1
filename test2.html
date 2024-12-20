@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红球和小蓝球</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .territory {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100px;
+            height: 100%;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+        .ball {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+            z-index: 2;
+        }
+        .red-ball {
+            background-color: #ff5733;
+        }
+        .blue-ball {
+            background-color: #3498db;
+        }
+        .coin {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: gold;
+            position: absolute;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="territory" id="territory"></div>
+        <div class="ball red-ball" id="redBall"></div>
+        <div class="ball blue-ball" id="blueBall"></div>
+        <div class="coin" id="coin1" style="right: 20px; top: 100px;"></div>
+        <div class="coin" id="coin2" style="right: 20px; top: 150px;"></div>
+        <div class="coin" id="coin3" style="right: 20px; top: 200px;"></div>
+    </div>
+
+    <script>
+        const redBall = document.getElementById('redBall');
+        const blueBall = document.getElementById('blueBall');
+        const territory = document.getElementById('territory');
+        const coins = document.querySelectorAll('.coin');
+        let collectedCoins = [];
+
+        // 红球跟随鼠标移动
+        document.addEventListener('mousemove', (event) => {
+            redBall.style.left = event.clientX - 25 + 'px';
+            redBall.style.top = event.clientY - 25 + 'px';
+            collectCoins(event.clientX, event.clientY);
+        });
+
+        // 蓝球追随红球
+        function followRedBall() {
+            const redRect = redBall.getBoundingClientRect();
+            const blueRect = blueBall.getBoundingClientRect();
+
+            const dx = (redRect.left + redRect.width / 2) - (blueRect.left + blueRect.width / 2);
+            const dy = (redRect.top + redRect.height / 2) - (blueRect.top + blueRect.height / 2);
+
+            blueBall.style.left = blueRect.left + dx * 0.05 + 'px';
+            blueBall.style.top = blueRect.top + dy * 0.05 + 'px';
+
+            requestAnimationFrame(followRedBall);
+            checkCollisionWithBlueBall();
+        }
+
+        followRedBall();
+
+        // 收集金币
+        function collectCoins(x, y) {
+            coins.forEach((coin, index) => {
+                const coinRect = coin.getBoundingClientRect();
+                if (x >= coinRect.left && x <= coinRect.right && y >= coinRect.top && y <= coinRect.bottom) {
+                    if (!collectedCoins.includes(coin)) {
+                        collectedCoins.push(coin);
+                        coin.style.left = x - 10 + 'px';
+                        coin.style.top = y - 10 + 'px';
+                    }
+                }
+            });
+            placeCoinsInTerritory();
+        }
+
+        // 将金币放置在领地中
+        function placeCoinsInTerritory() {
+            const redRect = redBall.getBoundingClientRect();
+            const territoryRect = territory.getBoundingClientRect();
+
+            if (redRect.left < territoryRect.right) {
+                collectedCoins.forEach((coin, index) => {
+                    coin.style.left = territoryRect.left + 10 + 'px';
+                    coin.style.top = territoryRect.top + 10 + index * 30 + 'px';
+                });
+                collectedCoins = [];
+                updateTerritoryColor();
+            }
+        }
+
+        // 更新领地颜色
+        function updateTerritoryColor() {
+            const coinsInTerritory = territory.querySelectorAll('.coin');
+            if (coinsInTerritory.length > 3) {
+                territory.style.backgroundColor = 'gold';
+            } else {
+                territory.style.backgroundColor = '#e0e0e0';
+            }
+        }
+
+        // 检查蓝球与红球的碰撞
+        function checkCollisionWithBlueBall() {
+            const redRect = redBall.getBoundingClientRect();
+            const blueRect = blueBall.getBoundingClientRect();
+
+            if (blueRect.left < redRect.right && blueRect.right > redRect.left &&
+                blueRect.top < redRect.bottom && blueRect.bottom > redRect.top) {
+                clearTerritory();
+            }
+        }
+
+        // 清除领地中的所有金币
+        function clearTerritory() {
+            const coinsInTerritory = territory.querySelectorAll('.coin');
+            coinsInTerritory.forEach(coin => {
+                coin.remove();
+            });
+            territory.style.backgroundColor = '#e0e0e0';
+        }
+    </script>
+</body>
+</html>

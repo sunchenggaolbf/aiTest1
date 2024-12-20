@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红球和小蓝球</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+        .ball {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .red-ball {
+            background-color: #ff5733;
+        }
+        .blue-ball {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="ball red-ball" id="redBall"></div>
+    <div class="ball blue-ball" id="blueBall"></div>
+
+    <script>
+        const redBall = document.getElementById('redBall');
+        const blueBall = document.getElementById('blueBall');
+        
+        document.addEventListener('mousemove', (event) => {
+            redBall.style.left = event.clientX - 25 + 'px';
+            redBall.style.top = event.clientY - 25 + 'px';
+        });
+
+        function followRedBall() {
+            const redRect = redBall.getBoundingClientRect();
+            const blueRect = blueBall.getBoundingClientRect();
+
+            const dx = (redRect.left + redRect.width / 2) - (blueRect.left + blueRect.width / 2);
+            const dy = (redRect.top + redRect.height / 2) - (blueRect.top + blueRect.height / 2);
+
+            blueBall.style.left = blueRect.left + dx * 0.05 + 'px';
+            blueBall.style.top = blueRect.top + dy * 0.05 + 'px';
+
+            requestAnimationFrame(followRedBall);
+        }
+
+        followRedBall();
+    </script>
+</body>
+</html>
