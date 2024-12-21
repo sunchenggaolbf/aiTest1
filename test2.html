@@ -29,7 +29,7 @@
             top: 0;
             width: 100px;
             height: 100%;
-            background-image: url('领地图片URL'); /* 替换为领地图片的URL */
+            background-image: url('./resource/imgs/lingdi.png'); /* 替换为领地图片的URL */
             background-size: cover;
             z-index: 1;
         }
@@ -62,7 +62,8 @@
         .house {
             width: 50px;
             height: 50px;
-            background-color: brown;
+            background-image: url('./resource/imgs/house.png'); /* 替换为小木屋图片的URL */
+            background-size: cover;
             position: absolute;
             display: none;
             z-index: 4;
@@ -186,12 +187,10 @@
         function updateTerritoryColor() {
             const coinsInTerritory = territory.querySelectorAll('.coin');
             if (coinsInTerritory.length >= 3) {
-                territory.style.backgroundColor = 'gold';
                 house.style.display = 'block'; // 显示小房子
                 house.style.left = '20px'; // 设置小房子的位置
                 house.style.top = '20px';
             } else {
-                territory.style.backgroundColor = '#e0e0e0';
                 house.style.display = 'none'; // 隐藏小房子
             }
         }
@@ -210,11 +209,11 @@
         // 清除领地中的所有金币
         function clearTerritory() {
             const coinsInTerritory = Array.from(territory.querySelectorAll('.coin'));
-            
+
             coinsInTerritory.forEach((coin) => {
                 // 获取金币的初始位置
                 const initialPosition = initialPositions.find(pos => pos.id === coin.id);
-                
+
                 // 恢复金币的初始位置和父组件
                 if (initialPosition) {
                     coin.style.left = initialPosition.left;
@@ -227,7 +226,6 @@
             coins = Array.from(document.querySelectorAll('.coin'));
 
             // 重置领地背景颜色
-            territory.style.backgroundColor = '#e0e0e0';
             house.style.display = 'none'; // 隐藏小房子
         }
     </script>
