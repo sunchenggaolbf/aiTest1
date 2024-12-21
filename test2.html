@@ -55,6 +55,15 @@
             position: absolute;
             z-index: 3;
         }
+
+        .house {
+            width: 50px;
+            height: 50px;
+            background-color: brown;
+            position: absolute;
+            display: none;
+            z-index: 4;
+        }
     </style>
 </head>
 
@@ -66,6 +75,7 @@
         <div class="coin" id="coin1" style="right: 20px; top: 100px;"></div>
         <div class="coin" id="coin2" style="right: 20px; top: 150px;"></div>
         <div class="coin" id="coin3" style="right: 20px; top: 200px;"></div>
+        <div class="house" id="house"></div>
     </div>
 
     <script>
@@ -73,6 +83,7 @@
         const blueBall = document.getElementById('blueBall');
         const territory = document.getElementById('territory');
         const gameContainer = document.getElementById('gameContainer');
+        const house = document.getElementById('house');
         let coins = Array.from(document.querySelectorAll('.coin'));
         let collectedCoins = [];
         let attachedCoins = [];
@@ -171,10 +182,14 @@
         // 更新领地颜色
         function updateTerritoryColor() {
             const coinsInTerritory = territory.querySelectorAll('.coin');
-            if (coinsInTerritory.length > 3) {
+            if (coinsInTerritory.length >= 3) {
                 territory.style.backgroundColor = 'gold';
+                house.style.display = 'block'; // 显示小房子
+                house.style.left = '20px'; // 设置小房子的位置
+                house.style.top = '20px';
             } else {
                 territory.style.backgroundColor = '#e0e0e0';
+                house.style.display = 'none'; // 隐藏小房子
             }
         }
 
@@ -210,6 +225,7 @@
 
             // 重置领地背景颜色
             territory.style.backgroundColor = '#e0e0e0';
+            house.style.display = 'none'; // 隐藏小房子
         }
     </script>
 </body>
