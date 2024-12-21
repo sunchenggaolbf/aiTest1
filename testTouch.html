@@ -82,10 +82,11 @@
             return { id: coin.id, left: coin.style.left, top: coin.style.top };
         });
 
-        // 红球跟随鼠标移动
-        document.addEventListener('mousemove', (event) => {
-            redBall.style.left = event.clientX - 25 + 'px';
-            redBall.style.top = event.clientY - 25 + 'px';
+        // 红球跟随触摸移动
+        function moveRedBall(event) {
+            const touch = event.touches[0];
+            redBall.style.left = touch.clientX - 25 + 'px';
+            redBall.style.top = touch.clientY - 25 + 'px';
 
             // 更新附着在红球上的金币位置
             attachedCoins.forEach(coin => {
@@ -93,8 +94,11 @@
                 coin.style.top = redBall.style.top;
             });
 
-            collectCoins(event.clientX, event.clientY);
-        });
+            collectCoins(touch.clientX, touch.clientY);
+        }
+
+        gameContainer.addEventListener('touchstart', moveRedBall);
+        gameContainer.addEventListener('touchmove', moveRedBall);
 
         // 蓝球追随红球
         function followRedBall() {
@@ -182,9 +186,7 @@
 
         // 清除领地中的所有金币
         function clearTerritory() {
-            const coinsInTerritory = Array.from(territory.querySelectorAll('.coin'));
-            
-            coinsInTerritory.forEach((coin) => {
+            coins.forEach((coin) => {
                 // 获取金币的初始位置
                 const initialPosition = initialPositions.find(pos => pos.id === coin.id);
                 
