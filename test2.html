@@ -61,8 +61,8 @@
         }
 
         .house {
-            width: 50px;
-            height: 50px;
+            width: 150px;
+            height: 150px;
             background-image: url('./resource/imgs/house.png'); /* 替换为小木屋图片的URL */
             background-size: cover;
             position: absolute;
@@ -184,17 +184,19 @@
             }
         }
 
-        // 更新领地颜色
-        function updateTerritoryColor() {
-            const coinsInTerritory = territory.querySelectorAll('.coin');
-            if (coinsInTerritory.length >= 3) {
-                house.style.display = 'block'; // 显示小房子
-                house.style.left = '20px'; // 设置小房子的位置
-                house.style.top = '20px';
-            } else {
-                house.style.display = 'none'; // 隐藏小房子
-            }
+        // 判断是否出现小房子
+    function updateTerritoryColor() {
+        const coinsInTerritory = territory.querySelectorAll('.coin');
+        if (coinsInTerritory.length >= 3) {
+            house.style.display = 'block'; // 显示小房子
+            house.style.left = `${territory.clientLeft + territory.clientWidth * 0.3}px`; // 设置小房子的位置在领地内，靠左30%
+            house.style.top = `${territory.clientTop + territory.clientHeight * 0.85}px`; // 设置小房子的位置在领地内，高度55%
+        } else {
+            house.style.display = 'none'; // 隐藏小房子
         }
+    }
+
+
 
         // 检查蓝球与红球的碰撞
         function checkCollisionWithBlueBall() {
