@@ -100,12 +100,21 @@
         function followRedBall() {
             const redRect = redBall.getBoundingClientRect();
             const blueRect = blueBall.getBoundingClientRect();
+            const territoryRect = territory.getBoundingClientRect();
 
             const dx = (redRect.left + redRect.width / 2) - (blueRect.left + blueRect.width / 2);
             const dy = (redRect.top + redRect.height / 2) - (blueRect.top + blueRect.height / 2);
 
-            blueBall.style.left = blueRect.left + dx * 0.05 + 'px';
-            blueBall.style.top = blueRect.top + dy * 0.05 + 'px';
+            let newBlueBallLeft = blueRect.left + dx * 0.05;
+            let newBlueBallTop = blueRect.top + dy * 0.05;
+
+            // 检查蓝球是否尝试进入领地
+            if (newBlueBallLeft < territoryRect.right) {
+                newBlueBallLeft = territoryRect.right;
+            }
+
+            blueBall.style.left = newBlueBallLeft + 'px';
+            blueBall.style.top = newBlueBallTop + 'px';
 
             requestAnimationFrame(followRedBall);
             checkCollisionWithBlueBall();
