@@ -25,10 +25,11 @@
 
         .territory {
             position: absolute;
-            left: 0;
-            top: 0;
-            width: 100px;
-            height: 100%;
+            left: 10px; /* 领地距离左边的位置 */
+            top: 50%; /* 领地距离顶部的位置 */
+            transform: translateY(-50%); /* 垂直居中 */
+            width: 400px;
+            height: 400px; /* 调整为方块区域 */
             background-image: url('./resource/imgs/lingdi.png'); /* 替换为领地图片的URL */
             background-size: cover;
             z-index: 1;
@@ -47,7 +48,7 @@
         }
 
         .blue-ball {
-            background-image: url('./resource//imgs/taopao.png'); /* 替换为小蓝球图片的URL */
+            background-image: url('./resource/imgs/taopao.png'); /* 替换为小蓝球图片的URL */
         }
 
         .coin {
